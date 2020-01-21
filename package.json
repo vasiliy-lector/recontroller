@@ -1,0 +1,35 @@
+{
+  "name": "re-x",
+  "version": "0.0.1",
+  "description": "library for React projects which provide Controller and Store",
+  "main": "lib/index.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vasiliy-lector/re-x.git"
+  },
+  "keywords": [
+    "react",
+    "mvc",
+    "controller",
+    "store"
+  ],
+  "author": "Vasilliy Dyakov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vasiliy-lector/re-x/issues"
+  },
+  "homepage": "https://github.com/vasiliy-lector/re-x#readme",
+  "dependencies": {
+    "ramda": "^0.26.1",
+    "react": "^16.12.0",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.26.39",
+    "@types/react": "^16.9.18"
+  }
+}
