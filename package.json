@@ -1,5 +1,5 @@
 {
-  "name": "re-x",
+  "name": "recontroller",
   "version": "0.0.1",
   "description": "library for React projects which provide Controller and Store",
   "main": "lib/index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vasiliy-lector/re-x.git"
+    "url": "git+https://github.com/vasiliy-lector/recontroller.git"
   },
   "keywords": [
     "react",
@@ -20,9 +20,9 @@
   "author": "Vasilliy Dyakov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vasiliy-lector/re-x/issues"
+    "url": "https://github.com/vasiliy-lector/recontroller/issues"
   },
-  "homepage": "https://github.com/vasiliy-lector/re-x#readme",
+  "homepage": "https://github.com/vasiliy-lector/recontroller#readme",
   "dependencies": {
     "ramda": "^0.26.1",
     "react": "^16.12.0"
