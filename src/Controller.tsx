@@ -7,41 +7,44 @@ interface GlobalControllerClass<P, S, VP, SS, C extends Controller<P, S, VP, SS>
 interface LocalControllerClass<P, S, VP, C extends LocalController<P, S, VP> = LocalController<P, S, VP>> {
     new(...args: any[]): C;
 }
-
 type ControllerClass<P, S, VP, SS = {}> = GlobalControllerClass<P, S, VP, SS> | LocalControllerClass<P, S, VP>;
 type ControllerOrView<P, VP = void> = React.StatelessComponent<P> | ControllerClass<P, any, VP>;
-export type ControllerProps<P, VP, SS> = P & {
+export type ControllerProps<P, VP, SS> = {
+    props: P,
     state: SS,
     getState: GetState<SS>,
     setState: SetState<SS>,
     Component: ControllerOrView<VP>
 };
-export type LocalControllerProps<P, VP> = P & {
+export type LocalControllerProps<P, VP> = {
+    props: P,
     Component: ControllerOrView<VP>
 };
-export abstract class Controller<P = {}, S = void, VP = {}, SS = {}>
+export abstract class Controller<P, S, VP, SS>
     extends React.Component<ControllerProps<P, VP, SS>, S> {
+    isLocal: false = false;
 
     abstract state: S;
     abstract getProps(storeState: SS, props: P, state: S): VP;
 
 	render() {
-        const { Component, state, setState, getState, ...props } = this.props;
+        const { Component, state } = this.props;
 
-		return <Component {...this.getProps(state, props as P, this.state) as any}/>;
+		return <Component {...this.getProps(state, this.props.props, this.state)}/>;
 	}
 }
 
-export abstract class LocalController<P = {}, S = void, VP = {}>
+export abstract class LocalController<P, S, VP>
     extends React.Component<LocalControllerProps<P, VP>, S> {
+    isLocal: true = true;
 
     abstract state: S;
     abstract getProps(props: P, state: S): VP;
 
 	render() {
-        const { Component, ...props } = this.props;
+        const { Component } = this.props;
 
-		return <Component {...this.getProps(props as P, this.state) as any}/>;
+		return <Component {...this.getProps(this.props.props, this.state)}/>;
 	}
 }
 
@@ -57,7 +60,7 @@ export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, 
     (Component: ControllerOrView<VP>): React.StatelessComponent<P> =>
         (props: P) => isLocalController(Wrapper)
             ? <Wrapper
-                {...props}
+                props={props}
                 Component={Component}
             />
             : <StoreContext.Consumer>
@@ -65,7 +68,7 @@ export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, 
                     state={state}
                     getState={getState}
                     setState={setState}
-                    {...props}
+                    props={props}
                     Component={Component}
                 />}
             </StoreContext.Consumer>;
