@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "compile": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
