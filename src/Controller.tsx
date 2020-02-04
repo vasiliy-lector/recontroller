@@ -53,7 +53,9 @@ const isLocalController = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>)
     return Wrapper.prototype instanceof LocalController;
 }
 
-export const wrap = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>) =>
+export type Enhancer<P, VP> = (Component: ControllerOrView<VP>) => React.StatelessComponent<P>;
+
+export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, S, VP, SS>): Enhancer<P, VP> =>
     (Component: ControllerOrView<VP>): React.StatelessComponent<P> =>
         (props: P) => isLocalController(Wrapper)
             ? <Wrapper
@@ -69,3 +71,19 @@ export const wrap = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>) =>
                     Component={Component}
                 />}
             </StoreContext.Consumer>;
+
+type EnhancersForCompose<P, VP, A = any, B = any, C = any> =
+    [Enhancer<P, VP>] |
+    [Enhancer<P, A>, Enhancer<A, VP>] |
+    [Enhancer<P, A>, Enhancer<A, B>, Enhancer<B, VP>] |
+    [Enhancer<P, A>, Enhancer<A, B>, Enhancer<B, C>, Enhancer<C, VP>];
+
+export const compose = <P, VP>(...enhancers: EnhancersForCompose<P, VP>) => (Component: ControllerOrView<VP>) => {
+    let result: any = Component;    
+
+    for (let i = enhancers.length - 1; i > 0; i--) {
+        result = enhancers[i](result);
+    }
+
+    return result as Enhancer<P, VP>;
+};
