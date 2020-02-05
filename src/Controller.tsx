@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentClass, FC } from 'react';
 import { StoreContext, SetState, GetState } from './Store';
 
 interface GlobalControllerClass<P, S, VP, SS, C extends Controller<P, S, VP, SS> = Controller<P, S, VP, SS>> {
@@ -8,17 +8,17 @@ interface LocalControllerClass<P, S, VP, C extends LocalController<P, S, VP> = L
     new(...args: any[]): C;
 }
 type ControllerClass<P, S, VP, SS = {}> = GlobalControllerClass<P, S, VP, SS> | LocalControllerClass<P, S, VP>;
-type ControllerOrView<P, VP = void> = React.StatelessComponent<P> | ControllerClass<P, any, VP>;
+type ReactFuntionOrClass<P> = FC<P> | ComponentClass<P, any>;
 export type ControllerProps<P, VP, SS> = {
     props: P,
     state: SS,
     getState: GetState<SS>,
     setState: SetState<SS>,
-    Component: ControllerOrView<VP>
+    Component: ReactFuntionOrClass<VP>
 };
 export type LocalControllerProps<P, VP> = {
     props: P,
-    Component: ControllerOrView<VP>
+    Component: ReactFuntionOrClass<VP>
 };
 export abstract class Controller<P, S, VP, SS>
     extends React.Component<ControllerProps<P, VP, SS>, S> {
@@ -54,10 +54,10 @@ const isLocalController = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>)
     return Wrapper.prototype instanceof LocalController;
 }
 
-export type Enhancer<P, VP> = (Component: ControllerOrView<VP>) => React.StatelessComponent<P>;
+export type Enhancer<P, VP> = (Component: ReactFuntionOrClass<VP>) => ReactFuntionOrClass<P>;
 
 export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, S, VP, SS>): Enhancer<P, VP> =>
-    (Component: ControllerOrView<VP>): React.StatelessComponent<P> =>
+    (Component: ReactFuntionOrClass<VP>): FC<P> =>
         (props: P) => isLocalController(Wrapper)
             ? <Wrapper
                 props={props}
@@ -79,7 +79,7 @@ type EnhancersForCompose<P, VP, A = any, B = any, C = any> =
     [Enhancer<P, A>, Enhancer<A, B>, Enhancer<B, VP>] |
     [Enhancer<P, A>, Enhancer<A, B>, Enhancer<B, C>, Enhancer<C, VP>];
 
-export const compose = <P, VP>(...enhancers: EnhancersForCompose<P, VP>) => (Component: ControllerOrView<VP>) => {
+export const compose = <P, VP>(...enhancers: EnhancersForCompose<P, VP>) => (Component: ReactFuntionOrClass<VP>) => {
     let result: any = Component;    
 
     for (let i = enhancers.length - 1; i > 0; i--) {
