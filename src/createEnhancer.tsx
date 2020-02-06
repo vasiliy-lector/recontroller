@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { ControllerClass, Enhancer, ReactFunctionOrClass, LocalControllerClass } from './types'
 import { LocalController } from './LocalController';
 import { StoreContext } from './Store';
@@ -10,8 +10,8 @@ const isLocalController = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>)
 }
 
 export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, S, VP, SS>): Enhancer<P, VP> =>
-    (Component: ReactFunctionOrClass<VP>): FC<P> =>
-        function RecontrollerEnhancer(props: P) {
+    (Component) =>
+        function RecontrollerEnhancer(props) {
             return isLocalController(Wrapper)
                 ? <Wrapper
                     {...props}

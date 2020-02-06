@@ -1,14 +1,16 @@
-import { Enhancer, ReactFunctionOrClass } from './types';
+import { Enhancer } from './types';
 
-// FIXME: any
-export function compose(...enhancers: Enhancer<any, any>[]) {
-    return (Component: ReactFunctionOrClass<any>) => {
+export function compose<P, VP>(a: Enhancer<P, VP>): Enhancer<P, VP>;
+export function compose<P, VP, A>(a: Enhancer<P, A>, b: Enhancer<A, VP>): Enhancer<P, VP>;
+export function compose<P, VP, A, B>(a: Enhancer<P, A>, b: Enhancer<A, B>, c: Enhancer<B, VP>): Enhancer<P, VP>;
+export function compose<P, VP>(a: Enhancer<P, any>, ...enhancers: Array<Enhancer<any, any>>): Enhancer<P, VP> {
+    return (Component) => {
         let result: any = Component;    
 
         for (let i = enhancers.length - 1; i >= 0; i--) {
             result = enhancers[i](result);
         }
 
-        return result;
+        return a(result);
     }; 
 }

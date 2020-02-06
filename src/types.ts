@@ -14,4 +14,4 @@ export type ControllerClass<P, S, VP, SS = {}> = GlobalControllerClass<P, S, VP,
 
 export type ReactFunctionOrClass<P> = FC<P> | ComponentClass<P, any>;
 
-export type Enhancer<P, VP extends Partial<P>> = (Component: ReactFunctionOrClass<VP>) => ReactFunctionOrClass<P>;
+export type Enhancer<P, VP> = (Component: ReactFunctionOrClass<VP>) => ReactFunctionOrClass<P>;
