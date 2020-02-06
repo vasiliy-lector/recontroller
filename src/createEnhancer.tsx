@@ -11,17 +11,19 @@ const isLocalController = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>)
 
 export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, S, VP, SS>): Enhancer<P, VP> =>
     (Component: ReactFunctionOrClass<VP>): FC<P> =>
-        (props: P) => isLocalController(Wrapper)
-            ? <Wrapper
-                {...props}
-                Component={Component}
-            />
-            : <StoreContext.Consumer>
-                {({ state, getState, setState}) => <Wrapper
+        function RecontrollerEnhancer(props: P) {
+            return isLocalController(Wrapper)
+                ? <Wrapper
                     {...props}
-                    state={state}
-                    getState={getState}
-                    setState={setState}
                     Component={Component}
-                />}
-            </StoreContext.Consumer>;
+                />
+                : <StoreContext.Consumer>
+                    {({ state, getState, setState}) => <Wrapper
+                        {...props}
+                        state={state}
+                        getState={getState}
+                        setState={setState}
+                        Component={Component}
+                    />}
+                </StoreContext.Consumer>;
+        }
