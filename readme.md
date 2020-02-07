@@ -56,7 +56,7 @@ class CheckboxController extends Controller<PropsController, StateController, Pr
 const Checkbox: React.FC<Props> = ({ onClick, title, checked }) => {
     return <div
         onClick={onClick}
-        className={`checkbox_${theme}`}
+        className={'checkbox_' + theme}
     >
         <input type='checkbox' checked={checked} /> {title}
     </div>;
