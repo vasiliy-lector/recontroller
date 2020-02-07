@@ -4,7 +4,7 @@ export function compose<P, VP = any>(a: Enhancer<P, any>, ...enhancers: Array<En
     return (Component: ReactFunctionOrClass<VP>) => {
         let result: any = Component;    
 
-        for (let i = enhancers.length - 1; i > 0; i--) {
+        for (let i = enhancers.length - 1; i >= 0; i--) {
             result = enhancers[i](result);
         }
 
