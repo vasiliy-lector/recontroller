@@ -1,5 +1,5 @@
 import React from 'react';
-import { ControllerClass, Enhancer, ReactFunctionOrClass, LocalControllerClass } from './types'
+import { ControllerClass, Enhancer, LocalControllerClass } from './types'
 import { LocalController } from './LocalController';
 import { StoreContext } from './Store';
 
