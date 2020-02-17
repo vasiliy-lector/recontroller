@@ -48,12 +48,13 @@ class CheckboxController extends Controller<PropsController, StateController, Pr
         return {
             title,
             checked,
-            theme
+            theme,
+            onClick: this.handleClick
         };
     }
 }
 
-const Checkbox: React.FC<Props> = ({ onClick, title, checked }) => {
+const Checkbox: React.FC<Props> = ({ onClick, title, checked, theme }) => {
     return <div
         onClick={onClick}
         className={'checkbox_' + theme}
