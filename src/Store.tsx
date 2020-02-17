@@ -23,6 +23,7 @@ type State<S> = {
 
 export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
     state: State<S>;
+    protected momentState: S;
 
     constructor(props: Props<S>) {
         super(props);
@@ -31,6 +32,7 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
             setState: this.setStoreState,
             getState: this.getStoreState
         };
+        this.momentState = props.initialState;
     }
 
     componentDidUpdate(prevProps: Props<S>, prevState: State<S>) {
@@ -39,9 +41,10 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
         }
     }
 
-    setStoreState: SetState<S> = (nextState, path) => this.setState({
-        state: path ? set(lensPath(path), nextState, this.state.state) : nextState
-    })
+    setStoreState: SetState<S> = (nextState, path) => {
+        this.momentState = set(lensPath(path), nextState, this.momentState);
+        this.setState({ state: this.momentState });
+    }
 
     getStoreState: GetState<S> = (path) => path
         ? view(lensPath(path), this.state.state)
