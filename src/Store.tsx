@@ -2,7 +2,7 @@ import React from 'react';
 import { set, view, lensPath } from 'ramda';
 
 type Path = Array<string | number>;
-export type SetState<S> = ((nextState: S) => void) | ((nextState: any, path: Path) => void); // FIXME: any
+export type SetState<S> = ((nextState: any, path: Path) => void); // FIXME: any
 export type GetState<S> = (() => S) | ((path?: Path) => any); // FIXME: any
 
 export const StoreContext = React.createContext<any>({
