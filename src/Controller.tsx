@@ -14,12 +14,11 @@ export abstract class Controller<P, S, VP, SS>
     isLocal: false = false;
     props!: ControllerProps<P, VP, SS>;
 
-    abstract state: S;
     abstract getProps(storeState: SS, props: P, state: S): VP;
 
-	render() {
+    render() {
         const { Component, state, getState, setState, ...props } = this.props as any;
 
-		return <Component {...this.getProps(state, props, this.state)}/>;
-	}
+        return <Component {...this.getProps(state, props, this.state)}/>;
+    }
 }

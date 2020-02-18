@@ -7,15 +7,14 @@ export type LocalControllerProps<P, VP> = P & {
 
 export abstract class LocalController<P, S, VP>
     extends React.Component<P, S> {
-    props!: LocalControllerProps<P, VP>;
     isLocal: true = true;
+    props!: LocalControllerProps<P, VP>;
 
-    abstract state: S;
     abstract getProps(props: P, state: S): VP;
 
-	render() {
+    render() {
         const { Component, ...props } = this.props as any;
 
-		return <Component {...this.getProps(props, this.state)}/>;
-	}
+        return <Component {...this.getProps(props, this.state)}/>;
+    }
 }
