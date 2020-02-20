@@ -1,9 +1,6 @@
 import React from 'react';
 import { set, view, lensPath } from 'ramda';
-
-type Path = Array<string | number>;
-export type SetState<S> = ((nextState: any, path: Path) => void); // FIXME: any
-export type GetState<S> = (() => S) | ((path?: Path) => any); // FIXME: any
+import { PathType, Path } from './types';
 
 export const StoreContext = React.createContext<any>({
     state: {},
@@ -17,8 +14,8 @@ type Props<S> = {
 };
 type State<S> = {
     state: S,
-    setState: SetState<S>,
-    getState: GetState<S>
+    setState: <P extends Path, V = PathType<S, P>>(nextState: V, path: P) => void,
+    getState: <P extends Path>(path: P) => PathType<S, P>
 };
 
 export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
@@ -31,7 +28,7 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
             state: props.initialState,
             setState: this.setStoreState,
             getState: this.getStoreState
-        };
+        } as any;
         this.momentState = props.initialState;
     }
 
@@ -41,14 +38,12 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
         }
     }
 
-    setStoreState: SetState<S> = (nextState, path) => {
+    setStoreState = <P extends Path, V = PathType<S, P>>(nextState: V, path: P): void => {
         this.momentState = set(lensPath(path), nextState, this.momentState);
         this.setState({ state: this.momentState });
     }
 
-    getStoreState: GetState<S> = (path) => path
-        ? view(lensPath(path), this.state.state)
-        : this.state.state;
+    getStoreState = <P extends Path>(path: P): PathType<S, P> => view(lensPath(path), this.state.state);
 
     render() {
         return <StoreContext.Provider value={this.state}>

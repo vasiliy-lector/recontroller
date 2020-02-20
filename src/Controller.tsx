@@ -1,11 +1,10 @@
 import React from 'react';
-import { SetState, GetState } from './Store';
-import { ReactFunctionOrClass } from './types';
+import { ReactFunctionOrClass, PathType, Path } from './types';
 
 export type ControllerProps<P, VP, SS> = P & {
     state: SS,
-    getState: GetState<SS>,
-    setState: SetState<SS>,
+    getState: <R extends Path>(path: R) => PathType<SS, R>,
+    setState: <R extends Path, V = PathType<SS, R>>(nextState: V, path: R) => void,
     Component: ReactFunctionOrClass<VP>
 };
 
