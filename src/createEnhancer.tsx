@@ -12,13 +12,14 @@ const isLocalController = <P, S, VP, SS>(Wrapper: ControllerClass<P, S, VP, SS>)
 export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, S, VP, SS>): Enhancer<P, VP> =>
     (Component) =>
         function RecontrollerEnhancer(props) {
+            const W: any = Wrapper;
             return isLocalController(Wrapper)
-                ? <Wrapper
+                ? <W
                     {...props}
                     Component={Component}
                 />
                 : <StoreContext.Consumer>
-                    {({ state, getState, setState}) => <Wrapper
+                    {({ state, getState, setState}) => <W
                         {...props}
                         state={state}
                         getState={getState}
