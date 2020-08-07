@@ -1,6 +1,6 @@
 {
   "name": "recontroller",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "library for React projects which provide Controller and Store",
   "main": "lib/index.js",
   "scripts": {
