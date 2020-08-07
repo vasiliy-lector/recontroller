@@ -19,10 +19,11 @@ export const createEnhancer = <P, S, VP, SS = void>(Wrapper: ControllerClass<P, 
                     Component={Component}
                 />
                 : <StoreContext.Consumer>
-                    {({ state, getState, setState}) => <W
+                    {({ state, getState, setState, getMomentState }) => <W
                         {...props}
                         state={state}
                         getState={getState}
+                        getMomentState={getMomentState}
                         setState={setState}
                         Component={Component}
                     />}

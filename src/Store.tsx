@@ -4,6 +4,7 @@ import { set, view, lensPath } from 'ramda';
 type Path = Array<string | number>;
 export type SetState<S> = ((nextState: any, path: Path) => void); // FIXME: any
 export type GetState<S> = (() => S) | ((path?: Path) => any); // FIXME: any
+export type GetMomentState<S> = (path: Path) => any; // FIXME: any
 
 export const StoreContext = React.createContext<any>({
     state: {},
@@ -18,7 +19,8 @@ type Props<S> = {
 type State<S> = {
     state: S,
     setState: SetState<S>,
-    getState: GetState<S>
+    getState: GetState<S>,
+    getMomentState: GetMomentState<S>
 };
 
 export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
@@ -30,7 +32,8 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
         this.state = {
             state: props.initialState,
             setState: this.setStoreState,
-            getState: this.getStoreState
+            getState: this.getStoreState,
+            getMomentState: this.getMomentStoreState
         };
         this.momentState = props.initialState;
     }
@@ -49,6 +52,8 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
     getStoreState: GetState<S> = (path) => path
         ? view(lensPath(path), this.state.state)
         : this.state.state;
+
+    getMomentStoreState: GetMomentState<S> = (path) => view(lensPath(path), this.momentState);
 
     render() {
         return <StoreContext.Provider value={this.state}>
