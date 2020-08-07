@@ -1,8 +1,13 @@
 import React from 'react';
-import { Enhancer } from './types'
-import { StoreContext } from './Store';
+import { StoreContext, GetState, GetMomentState, SetState } from './Store';
+import { Enhancer } from './types';
 
-export const provideControllerProps = <P, VP>(): Enhancer<P, VP> =>
+export const provideControllerProps = <P, SS>(): Enhancer<P, P & {
+    state: SS,
+    getState: GetState<SS>,
+    getMomentState: GetMomentState<SS>,
+    setState: SetState<SS>
+}> =>
     (Component) =>
         function ControllerPropsProvider(props) {
             const C: any = Component;
