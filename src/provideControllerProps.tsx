@@ -1,18 +1,16 @@
 import React from 'react';
 import { StoreContext, GetState, GetMomentState, SetState } from './Store';
-import { Enhancer } from './types';
+import { ReactFunctionOrClass } from './types';
 
-export const provideControllerProps = <P, SS>(): Enhancer<P, P & {
+export const provideControllerProps = <P extends {} = any, SS = any>(Component: ReactFunctionOrClass<P & {
     state: SS,
     getState: GetState<SS>,
     getMomentState: GetMomentState<SS>,
     setState: SetState<SS>
-}> =>
-    (Component) =>
-        function ControllerPropsProvider(props) {
-            const C: any = Component;
+}>) =>
+        function ControllerPropsProvider(props: P) {
             return <StoreContext.Consumer>
-                {({ state, getState, setState, getMomentState }) => <C
+                {({ state, getState, setState, getMomentState }) => <Component
                     {...props}
                     state={state}
                     getState={getState}
