@@ -2,12 +2,13 @@ import React from 'react';
 import { Enhancer } from './types'
 import { StoreContext } from './Store';
 
-export const connect = <SS, P, VP = any>(getProps: (state: SS, props: P) => VP): Enhancer<P, VP> =>
+export const connect = <P, MP = any, SS = any>(map: (state: SS, props: P) => MP): Enhancer<P, P & MP> =>
     (Component) =>
         function RecontrollerConnect(props: any) {
             return <StoreContext.Consumer>
                 {({ state }) => <Component
-                    {...getProps(state, props)}
+                    {...props}
+                    {...map(state, props)}
                 />}
             </StoreContext.Consumer>;
         }

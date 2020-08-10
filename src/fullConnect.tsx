@@ -9,12 +9,13 @@ export type FullConnectProps<SS> = {
 };
 
 export const fullConnect =
-    <SS, P, VP = any>(getProps: (state: SS, props: P) => VP): Enhancer<P, VP & FullConnectProps<SS>> =>
+    <P, MP = any, SS = any>(map: (state: SS, props: P) => MP): Enhancer<P, P & MP & FullConnectProps<SS>> =>
         (Component) =>
             function RecontrollerFullConnect(props: any) {
                 return <StoreContext.Consumer>
                     {({ state, getState, setState, getMomentState }) => <Component
-                        {...getProps(state, props)}
+                        {...props}
+                        {...map(state, props)}
                         getState={getState}
                         getMomentState={getMomentState}
                         setState={setState}
