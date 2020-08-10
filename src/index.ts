@@ -3,9 +3,6 @@ export { Controller, ControllerProps } from './Controller';
 export { LocalController, LocalControllerProps } from './LocalController';
 export { Enhancer } from './types';
 export { createEnhancer, createEnhancer as create } from './createEnhancer';
-export {
-    provideControllerProps,
-    ProvidedControllerProps,
-    provideControllerProps as provide
-} from './provideControllerProps';
+export { connect } from './connect';
+export { fullConnect, FullConnectProps } from './fullConnect';
 export { compose } from './compose';
