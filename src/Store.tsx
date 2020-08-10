@@ -1,5 +1,5 @@
 import React from 'react';
-import { set, view, lensPath } from 'ramda';
+import { set, view, lensPath } from 'ramda'; // TODO: not use ramda
 
 type Path = Array<string | number>;
 export type SetState<S> = ((nextState: any, path: Path) => void); // FIXME: any

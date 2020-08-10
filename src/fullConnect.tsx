@@ -8,6 +8,7 @@ export type FullConnectProps<SS> = {
     setState: SetState<SS>
 };
 
+// TODO: will be renamed to deprecatedFullConnect
 export const fullConnect =
     <P, MP = any, SS = any>(map: (state: SS, props: P) => MP): Enhancer<P, P & MP & FullConnectProps<SS>> =>
         (Component) =>
