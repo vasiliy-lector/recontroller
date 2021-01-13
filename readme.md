@@ -16,24 +16,25 @@ Recontroller разделяет представление и поведение
 
 Простейший пример компонента Checkbox.tsx, который берет настройку темы из глобального state и управляет своим состоянием:
 ```
-import React from 'react';
-import { Controller, create } from 'recontroller';
+import React, { Component } from 'react';
+import { ControllerProps, createConnected } from 'recontroller';
 import { StoreState } from '../store';
 
-type Props = {
+type ViewProps = {
     title: string,
     checked: boolean,
     onClick: (event: any) => void,
     theme: string
 };
-type PropsController = {
+type OwnProps = {
     title: string
 };
-type StateController = {
+type Props = OwnProps & ControllerProps<ViewProps, StoreState>
+type State = {
     checked: boolean
 };
 
-class CheckboxController extends Controller<PropsController, StateController, Props, StoreState> {
+class Checkbox extends Component<Props, State> {
     state: StateController = {
         checked: false
     };
@@ -41,20 +42,26 @@ class CheckboxController extends Controller<PropsController, StateController, Pr
     handleClick = () => {
         this.setState({
             checked: !this.state.checked
-        })
+        });
     }
 
-    getProps({ app: { theme }}: StoreState, { title }: PropsController, { checked }: StateController): Props {
-        return {
+    render() {
+        const { checked } = this.state;
+        const { title, state: { app: { theme } }, View } = this.props;
+        const viewProps = {
             title,
             checked,
             theme,
             onClick: this.handleClick
         };
+
+        return <View
+            {...viewProps}
+        >;
     }
 }
 
-const Checkbox: React.FC<Props> = ({ onClick, title, checked, theme }) => {
+const CheckboxView: React.FC<ViewProps> = ({ onClick, title, checked, theme }) => {
     return <div
         onClick={onClick}
         className={'checkbox_' + theme}
@@ -63,7 +70,7 @@ const Checkbox: React.FC<Props> = ({ onClick, title, checked, theme }) => {
     </div>;
 };
 
-export default create(CheckboxController)(Checkbox);
+export default createConnected<OwnProps>(Checkbox)(CheckboxView); // TODO: добавить deps в create
 ```
 
 Если нужен контроллер, которому не нужен доступ к Store, то нужно использовать LocalController. В методе getProps происходит merge всех доступных для view prop-ов: методы контроллера, локальный и глобальный state, prop-ы контроллера.
