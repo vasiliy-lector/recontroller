@@ -17,10 +17,12 @@ type Props<S> = {
     onStoreChange?: (state: S) => any
 };
 type State<S> = {
-    state: S,
-    setState: SetState<S>,
-    getState: GetState<S>,
-    getMomentState: GetMomentState<S>
+    store: {
+        state: S,
+        setState: SetState<S>,
+        getState: GetState<S>,
+        getMomentState: GetMomentState<S>
+    }
 };
 
 export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
@@ -30,28 +32,37 @@ export class StoreProvider<S> extends React.Component<Props<S>, State<S>> {
     constructor(props: Props<S>) {
         super(props);
         this.state = {
-            state: props.initialState,
-            setState: this.setStoreState,
-            getState: this.getStoreState,
-            getMomentState: this.getMomentStoreState
+            store: {
+                state: props.initialState,
+                setState: this.setStoreState,
+                getState: this.getStoreState,
+                getMomentState: this.getMomentStoreState
+            }
         };
         this.momentState = props.initialState;
     }
 
     componentDidUpdate(prevProps: Props<S>, prevState: State<S>) {
-        if (prevState.state !== this.state.state) {
-            this.props.onStoreChange?.(this.state.state);
+        if (prevState.store.state !== this.state.store.state) {
+            this.props.onStoreChange?.(this.state.store.state);
         }
     }
 
     setStoreState: SetState<S> = (nextState, path) => {
         this.momentState = set(lensPath(path), nextState, this.momentState);
-        this.setState({ state: this.momentState });
+        this.setState({
+            store: {
+                state: this.momentState,
+                setState: this.setStoreState,
+                getState: this.getStoreState,
+                getMomentState: this.getMomentStoreState
+            }
+        });
     }
 
     getStoreState: GetState<S> = (path) => path
-        ? view(lensPath(path), this.state.state)
-        : this.state.state;
+        ? view(lensPath(path), this.state.store.state)
+        : this.state.store.state;
 
     getMomentStoreState: GetMomentState<S> = (path) => view(lensPath(path), this.momentState);
 

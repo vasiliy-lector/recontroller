@@ -17,7 +17,7 @@ Recontroller разделяет представление и поведение
 Простейший пример компонента Checkbox.tsx, который берет настройку темы из глобального state и управляет своим состоянием:
 ```
 import React, { Component } from 'react';
-import { ControllerProps, createConnected } from 'recontroller';
+import { ControllerProps, create, withStore } from 'recontroller';
 import { StoreState } from '../store';
 
 type ViewProps = {
@@ -29,7 +29,7 @@ type ViewProps = {
 type OwnProps = {
     title: string
 };
-type Props = OwnProps & ControllerProps<ViewProps, StoreState>
+type Props = OwnProps & Create<ViewProps> & WithStore<StoreState>
 type State = {
     checked: boolean
 };
@@ -47,7 +47,7 @@ class Checkbox extends Component<Props, State> {
 
     render() {
         const { checked } = this.state;
-        const { title, state: { app: { theme } }, View } = this.props;
+        const { title, store: { state: { app: { theme } } }, View } = this.props;
         const viewProps = {
             title,
             checked,
@@ -70,7 +70,7 @@ const CheckboxView: React.FC<ViewProps> = ({ onClick, title, checked, theme }) =
     </div>;
 };
 
-export default createConnected<OwnProps>(Checkbox)(CheckboxView); // TODO: добавить deps в create
+export default create<OwnProps>(Checkbox, [withStore])(CheckboxView);
 ```
 
 Если нужен контроллер, которому не нужен доступ к Store, то нужно использовать LocalController. В методе getProps происходит merge всех доступных для view prop-ов: методы контроллера, локальный и глобальный state, prop-ы контроллера.
